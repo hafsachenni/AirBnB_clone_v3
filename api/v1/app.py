@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response
 from models import storage
 from api.v1.views import app_views
 import os
@@ -13,9 +13,9 @@ def close(exception):
     storage.close()
 
 @app.errorhandler(404)
-def error_404(arror):
+def error_404(error):
     error_dic = {"error": "Not found"}
-    return jsonify(error_dic)
+    return jsonify(error_dic), 404
 
 if __name__ == "__main__":
     """this is our main flask applicataion"""
