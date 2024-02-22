@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 from models.state import State
-from flask import Flask, jsonify,Blueprint , request, abort, make_response
+from flask import Flask, jsonify, Blueprint, request, abort, make_response
 from api.v1.views import app_views
 from models import storage
-from sqlalchemy.orm import query
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
@@ -29,11 +28,10 @@ def states(state_id):
 def states_delete(state_id):
     state = storage.get(State, state_id)
     if not state:
-        abort (404)
+        abort(404)
         #return error_404()
-    storage.delete(State)    
+    storage.delete(state)    
     storage.save()
-    storage.close()
     return make_response(jsonify({}), 200)
 
 
