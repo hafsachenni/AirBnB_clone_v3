@@ -3,6 +3,7 @@ from models.state import State
 from flask import Flask, jsonify,Blueprint , request, abort, make_response
 from api.v1.views import app_views
 from models import storage
+from sqlalchemy.orm import query
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
@@ -24,6 +25,17 @@ def states(state_id):
         #return error_404()
     return jsonify(state.to_dict())
 
+@app_views.route("/states/<state_id>", methods=["DELETE"], strict_slashes=False)
+def states_delete(state_id):
+    state = storage.get(State, state_id)
+    if not state:
+        abort (404)
+        #return error_404()
+    storage.delete(State)    
+    storage.save()
+    storage.close()
+    return make_response(jsonify({}), 200)
+
 
 @app_views.route('/states/', methods=['POST'], strict_slashes=False)
 def post():
@@ -37,3 +49,4 @@ def post():
     state = State(**request.get_json())
     state.save()
     return (jsonify(state.to_dict()), 201)
+
