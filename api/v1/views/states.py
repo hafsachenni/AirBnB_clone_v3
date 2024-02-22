@@ -31,9 +31,8 @@ def states_delete(state_id):
     if not state:
         abort (404)
         #return error_404()
-    storage.delete(State)    
+    storage.delete(state)    
     storage.save()
-    storage.close()
     return make_response(jsonify({}), 200)
 
 
@@ -50,3 +49,18 @@ def post():
     state.save()
     return (jsonify(state.to_dict()), 201)
 
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
+def put_state(state_id):
+    """ Update a state object with id using PUT method """
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
+    state_data = request.get_json()
+    if state_data is None:
+        abort(400, 'Not a JSON')
+    excluded_keys = ['id', 'created_at', 'updated_at']
+    for key, val in state_data.items():
+        if key not in excluded_keys:
+            setattr(state, key, val)
+    state.save()
+    return make_response(jsonify(state.to_dict()), 200)
