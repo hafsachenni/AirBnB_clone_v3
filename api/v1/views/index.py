@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ an endpoint that retrieves the number of each objects by type """
 from api.v1.views import app_views
-from flask import jsonify
+from flask import Flask, Blueprint, jsonify
 from models import storage
 
 
@@ -11,15 +11,18 @@ def hbnb_stats():
     return jsonify({"status": "OK"})
 
 
-@app_views.route("/stats", strict_slashes=False)
+@app_views.route('/stats', methods=['GET'])
 def stats():
-    """ retrieves the number of each objects by type  """
-    stats_dic = {
-        "amenities": storage.count("Amenity"),
-        "cities": storage.count("City"),
-        "places": storage.count("Place"),
-        "reviews": storage.count("Review"),
-        "states": storage.count("State"),
-        "users": storage.count("User"),
+    """ return the num of each obj"""
+    result = {}
+    objc_dict = {
+        "Amenity": "amenities",
+        "City": "cities",
+        "Place": "places",
+        "Review": "reviews",
+        "State": "states",
+        "User": "users"
     }
-    return jsonify(stats_dic)
+    for key, val in objc_dict.items():
+        result[val] = storage.count(key)
+    return jsonify(result)
