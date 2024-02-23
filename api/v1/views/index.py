@@ -11,18 +11,15 @@ def hbnb_stats():
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats', methods=['GET'])
+@app_views.route("/stats", strict_slashes=False)
 def stats():
-    """ return the num of each obj"""
-    result = {}
-    objc_dict = {
-        "Amenity": "amenities",
-        "City": "cities",
-        "Place": "places",
-        "Review": "reviews",
-        "State": "states",
-        "User": "users"
+    """ retrieves the number of each objects by type  """
+    stats_dic = {
+        "amenities": storage.count("Amenity"),
+        "cities": storage.count("City"),
+        "places": storage.count("Place"),
+        "reviews": storage.count("Review"),
+        "states": storage.count("State"),
+        "users": storage.count("User"),
     }
-    for key, val in objc_dict.items():
-        result[val] = storage.count(key)
-    return jsonify(result)
+    return jsonify(stats_dic)
