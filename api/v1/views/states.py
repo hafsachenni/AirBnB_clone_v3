@@ -20,7 +20,7 @@ def states(state_id):
     Retrieves a State object: GET /api/v1/states/<state_id>
     If the state_id is not linked to any State object, raise a 404 error """
     state = storage.get(State, state_id)
-    if not state:
+    if state is None:
         abort(404)
     return jsonify(state.to_dict())
 
@@ -30,7 +30,7 @@ def states(state_id):
 def states_delete(state_id):
     """ delete an object in states  """
     state = storage.get(State, state_id)
-    if not state:
+    if state is None:
         abort(404)
     storage.delete(state)
     storage.save()
@@ -41,12 +41,13 @@ def states_delete(state_id):
 def post():
     """creating a state using the post request"""
     """this checks if we have json data in request body"""
-    if not request.get_json():
+    ask = request.get_json()
+    if ask is None:
         abort(400, 'Not a JSON')
-    if 'name' not in request.get_json():
+    if ask.get("name") is None:
         abort(400, 'Missing name')
     """creation of new state, we added a state in the request body"""
-    state = State(**request.get_json())
+    state = State(**ask)
     state.save()
     return make_response(jsonify(state.to_dict()), 201)
 
