@@ -16,6 +16,7 @@ def close(exception):
 
 @app.errorhandler(404)
 def error_404(error):
+    """ return a dic error """
     error_dic = {"error": "Not found"}
     return jsonify(error_dic), 404
 
