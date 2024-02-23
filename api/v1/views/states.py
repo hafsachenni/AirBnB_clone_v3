@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+
+""" new view for State objects that handles all default RESTFul API actions """
 from models.state import State
 from flask import Flask, jsonify, Blueprint, request, abort, make_response
 from api.v1.views import app_views
@@ -26,6 +28,7 @@ def states(state_id):
 
 @app_views.route("/states/<state_id>", methods=["DELETE"], strict_slashes=False)
 def states_delete(state_id):
+    """ delete an object in states  """
     state = storage.get(State, state_id)
     if not state:
         abort(404)
