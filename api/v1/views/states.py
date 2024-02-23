@@ -47,4 +47,3 @@ def post():
     state = State(**request.get_json())
     state.save()
     return (jsonify(state.to_dict()), 201)
-
