@@ -8,7 +8,9 @@ from models.place import Place
 from models.city import City
 from models import storage
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
+
+@app_views.route(
+        '/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
 def get_places(city_id):
     """retrieves list of all place objects of a city"""
     city = storage.get(City, city_id)
@@ -62,8 +64,8 @@ def post_place(city_id):
     return make_response(jsonify(place2.to_dict()), 201)
 
 
-@app_views.route('/places/<place_id>', methods=['PUT'], 
-                 strict_slashes=False)
+@app_views.route(
+        '/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def put_place(place_id):
     """putting a place"""
     place = storage.get(Place, place_id)
@@ -71,7 +73,7 @@ def put_place(place_id):
         abort(404)
     if not request.get_json(silent=True):
         abort(400, 'Not a JSON')
-    key_list =['id', 'user_id', 'city_id', 'created_at', 'updated_at']
+    key_list = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
     for key, value in request.get_json(silent=True).items():
         if key not in key_list:
             setattr(place, key, value)
