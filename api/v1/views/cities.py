@@ -47,7 +47,7 @@ def post_city(state_id):
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
-    content = request.get_json()
+    content = request.get_json(silent=True)
     if content is None:
         abort(400, 'Not a JSON')
     if content.get("name") is None:
@@ -66,7 +66,7 @@ def put_city(city_id):
         abort(404)
     if request.get_json() is None:
         abort(400, 'Not a JSON')
-    content = request.get_json()
+    content = request.get_json(silent=True)
     list_keys = ['id', 'state_id', 'created_at', 'updated_at']
     for key, val in content.items():
         if key not in list_keys:
