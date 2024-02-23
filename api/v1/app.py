@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+""" app, instance of Flask """
+
 from flask import Flask, jsonify, make_response
 from models import storage
 from api.v1.views import app_views
@@ -14,6 +16,7 @@ def close(exception):
 
 @app.errorhandler(404)
 def error_404(error):
+    """ return a dic error """
     error_dic = {"error": "Not found"}
     return jsonify(error_dic), 404
 
