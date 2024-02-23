@@ -7,18 +7,23 @@ from api.v1.views import app_views
 import os
 
 app = Flask(__name__)
+
+
 app.register_blueprint(app_views)
+
 
 @app.teardown_appcontext
 def close(exception):
     """ closes connection/sql session on teardown """
     storage.close()
 
+
 @app.errorhandler(404)
 def error_404(error):
     """ return a dic error """
     error_dic = {"error": "Not found"}
     return jsonify(error_dic), 404
+
 
 if __name__ == "__main__":
     """this is our main flask applicataion"""
