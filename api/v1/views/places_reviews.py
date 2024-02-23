@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" new view for Review objects that handles all default RESTFul API actions """
+"""new view for Review objects that handles all default RESTFul API actions"""
 from models.review import Review
 from models.place import Place
 from models.user import User
@@ -8,7 +8,8 @@ from api.v1.views import app_views
 from models import storage
 
 
-@app_views.route('/places/<place_id>/reviews', methods=['GET'], strict_slashes=False)
+@app_views.route(
+        '/places/<place_id>/reviews', methods=['GET'], strict_slashes=False)
 def get_reviews(place_id):
     """ Retrieves the list of all Review objects of a Place """
     place = storage.get(Place, place_id)
@@ -39,7 +40,8 @@ def delete_review(review_id):
     return make_response(jsonify({}), 200)
 
 
-@app_views.route('/places/<place_id>/reviews', methods=['POST'], strict_slashes=False)
+@app_views.route(
+        '/places/<place_id>/reviews', methods=['POST'], strict_slashes=False)
 def post_review(place_id):
     """ Creates a Review """
     place = storage.get(Place, place_id)

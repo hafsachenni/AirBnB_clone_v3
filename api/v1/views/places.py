@@ -1,38 +1,37 @@
 #!/usr/bin/python3
-"""creating a new view for places that handles api actions/methods"""
-
-from api.v1.views import app_views
-from flask import abort, request, jsonify, make_response
-from models.user import User
+""" new view for Place objects that handles all default RESTFul API actions """
 from models.place import Place
 from models.city import City
+from models.user import User
+from flask import jsonify, request, abort, make_response
+from api.v1.views import app_views
 from models import storage
 
 
 @app_views.route(
         '/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
 def get_places(city_id):
-    """retrieves list of all place objects of a city"""
+    """ Retrieves the list of all Place objects of a City """
     city = storage.get(City, city_id)
-    if not city:
+    if city is None:
         abort(404)
     places = [place.to_dict() for place in city.places]
     return jsonify(places)
 
 
-@app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
-def place(place_id):
-    """gets one place based on its id"""
+@app_views.route("/places/<place_id>", methods=["GET"], strict_slashes=False)
+def get_place(place_id):
+    """ Retrieves a Place object """
     place = storage.get(Place, place_id)
-    if not place:
+    if place is None:
         abort(404)
     return jsonify(place.to_dict())
 
 
-@app_views.route('places/<place_id>', methods=['DELETE'],
+@app_views.route("/places/<place_id>", methods=["DELETE"],
                  strict_slashes=False)
 def delete_place(place_id):
-    """deletes a place based on its id"""
+    """ Deletes a Place object """
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
@@ -41,41 +40,43 @@ def delete_place(place_id):
     return make_response(jsonify({}), 200)
 
 
-@app_views.route('/cities/<city_id>/places', methods=['POST'],
-                 strict_slashes=False)
+@app_views.route(
+        '/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
 def post_place(city_id):
-    """posting a city"""
+    """ Creates a Place """
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
-    ask = request.get_json(silent=True)
-    if ask is None:
+    place_data = request.get_json(silent=True)
+    if place_data is None:
         abort(400, 'Not a JSON')
-    if ask.get("user_id") is None:
+    user_id = place_data.get("user_id")
+    if user_id is None:
         abort(400, 'Missing user_id')
-    user = storage.get(User, ask['user_id'])
+    user = storage.get(User, user_id)
     if user is None:
         abort(404)
-    if ask.get("name") is None:
+    name = place_data.get("name")
+    if name is None:
         abort(400, 'Missing name')
-    ask['city_id'] = city_id
-    place2 = Place(**ask)
-    storage.save()
-    return make_response(jsonify(place2.to_dict()), 201)
+    place = Place(**place_data)
+    place.city_id = city_id
+    place.save()
+    return make_response(jsonify(place.to_dict()), 201)
 
 
-@app_views.route(
-        '/places/<place_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def put_place(place_id):
-    """putting a place"""
+    """ Updates a Place object """
     place = storage.get(Place, place_id)
-    if not place:
+    if place is None:
         abort(404)
-    if not request.get_json(silent=True):
+    place_data = request.get_json(silent=True)
+    if place_data is None:
         abort(400, 'Not a JSON')
-    key_list = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
-    for key, value in request.get_json(silent=True).items():
-        if key not in key_list:
-            setattr(place, key, value)
-        place.save()
-        return make_response(jsonify(place.to_dict()), 200)
+    excluded_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
+    for key, val in place_data.items():
+        if key not in excluded_keys:
+            setattr(place, key, val)
+    place.save()
+    return make_response(jsonify(place.to_dict()), 200)
