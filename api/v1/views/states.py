@@ -42,9 +42,9 @@ def post():
     """creating a state using the post request"""
     """this checks if we have json data in request body"""
     if not request.get_json():
-        return (jsonify({'error: Not a JSON'}), 400)
+        abort(400, 'Not a JSON')
     if 'name' not in request.get_json():
-        return (jsonify({'error: Missing name'}), 400)
+        abort(400, 'Missing name')
     """creation of new state, we added a state in the request body"""
     state = State(**request.get_json())
     state.save()
