@@ -46,7 +46,7 @@ def post_place(city_id):
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
-    ask = request.get_json()
+    ask = request.get_json(silent=True)
     if ask is None:
         abort(400, 'Not a JSON')
     if ask.get("user_id") is None:
@@ -69,10 +69,10 @@ def put_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
-    if not request.get_json():
+    if not request.get_json(silent=True):
         abort(400, 'Not a JSON')
     key_list =['id', 'user_id', 'city_id', 'created_at', 'updated_at']
-    for key, value in request.get_json().items():
+    for key, value in request.get_json(silent=True).items():
         if key not in key_list:
             setattr(place, key, value)
         place.save()
