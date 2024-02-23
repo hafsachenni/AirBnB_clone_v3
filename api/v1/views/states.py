@@ -41,7 +41,7 @@ def states_delete(state_id):
 def post():
     """creating a state using the post request"""
     """this checks if we have json data in request body"""
-    ask = request.get_json()
+    ask = request.get_json(silent=True)
     if ask is None:
         abort(400, 'Not a JSON')
     if ask.get("name") is None:
@@ -58,7 +58,7 @@ def put_state(state_id):
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
-    state_data = request.get_json()
+    state_data = request.get_json(silent=True)
     if state_data is None:
         abort(400, 'Not a JSON')
     excluded_keys = ['id', 'created_at', 'updated_at']
