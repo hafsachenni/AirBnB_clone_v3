@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" new view for User objects that handles all default RESTFul API actions """
+""" other view for User objects that handles all default RESTFul API actions """
 from models.user import User
 from flask import jsonify, request, abort, make_response
 from api.v1.views import app_views

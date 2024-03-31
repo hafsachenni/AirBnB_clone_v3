@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""creation of a new view for amenity that handles all api actions"""
+"""creating a new view for amenity that handles all api actions"""
 from models.amenity import Amenity
 from flask import Flask, jsonify, Blueprint, request, abort, make_response
 from api.v1.views import app_views

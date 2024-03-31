@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""creation of a view of city objs using all the different methods"""
+"""creating a view of city objs using all the different methods"""
 from flask import jsonify, abort, make_response, request
 from models.state import State
 from api.v1.views import app_views
