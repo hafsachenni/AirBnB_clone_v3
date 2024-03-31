@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" onether view for State objects that handles all default RESTFul API actions """
+""" onether view for State objects"""
 from models.state import State
 from flask import jsonify, Blueprint, request, abort, make_response
 from api.v1.views import app_views
