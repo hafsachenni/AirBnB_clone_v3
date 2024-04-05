@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" app, instance of Flask """
+""" this is an app instance of Flask """
 
 from flask import Flask, jsonify, make_response
 from models import storage

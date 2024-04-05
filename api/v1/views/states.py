@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-""" new view for State objects that handles all default RESTFul API actions """
+""" onether view for State objects"""
 from models.state import State
-from flask import jsonify, request, abort, make_response
+from flask import jsonify, Blueprint, request, abort, make_response
 from api.v1.views import app_views
 from models import storage
 
@@ -34,7 +34,7 @@ def states_delete(state_id):
         abort(404)
     storage.delete(state)
     storage.save()
-    return make_response(jsonify({}), 200)
+    return jsonify({}), 200
 
 
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
@@ -54,7 +54,7 @@ def post():
 
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def put_state(state_id):
-    """ Update a state object with id using PUT method """
+    """ Updating a state object with id using PUT method """
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
